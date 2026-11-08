@@ -1,0 +1,27 @@
+name: Morning Briefing
+
+on:
+  schedule:
+    - cron: '0 22 * * *' # UTC 기준 22시 = 한국 시간(KST) 매일 아침 7시
+  workflow_dispatch: # Actions 탭에서 버튼 눌러 수동 테스트 가능
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run script
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: python main.py
